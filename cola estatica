@@ -1,0 +1,92 @@
+#include <iostream>
+
+using namespace std;
+
+struct Cola {
+    int elementos[15]; 
+    int frente;
+    int final;
+};
+
+void imprimir(Cola *C) {
+    for (int i = C->frente; i <= C->final; i++) {
+        cout << C->elementos[i] << endl;
+    }
+}
+
+void inicializar(Cola *C) {
+    C->frente = 0; // Inicializar el frente en 0
+    C->final = -1; // Inicializar el final en -1
+}
+
+int vacia(Cola *C) {
+    return (C->final == -1);
+}
+
+int llena(Cola *C) {
+    return (C->final == 14); // El índice máximo es 14 (0-14)
+}
+
+void encolar(Cola *C, int x) {
+    if (llena(C))
+        cout << "Error, la cola está llena" << endl;
+    else {
+        C->final++;
+        C->elementos[C->final] = x;
+    }
+}
+
+int desencolar(Cola *C) {
+    int valor = -1;
+    if (vacia(C))
+        cout << "Error, la cola está vacía" << endl;
+    else {
+        valor = C->elementos[C->frente];
+        if (C->frente == C->final) {
+            C->frente = 0;
+            C->final = -1;
+        } else {
+            C->frente++;
+        }
+    }
+    return valor;
+}
+
+int main() {
+    Cola colaAlumnos;
+    Cola colaAprobados;
+    Cola colaReprobados;
+
+    inicializar(&colaAlumnos);
+    inicializar(&colaAprobados);
+    inicializar(&colaReprobados);
+
+    int calificacion;
+
+    for (int i = 0; i < 15; i++) {
+        cout << "Introduce la calificación del alumno " << i + 1 << ": ";
+        cin >> calificacion;
+        
+        encolar(&colaAlumnos, calificacion);
+
+        while (!vacia(&colaAlumnos)) {
+            calificacion = desencolar(&colaAlumnos);
+
+            if (calificacion >= 70) {
+                encolar(&colaAprobados, calificacion);
+            } else {
+                encolar(&colaReprobados, calificacion);
+            }
+        }
+        cout << endl << "Alumnos: " << endl; 
+        imprimir(&colaAlumnos);
+
+        cout << endl << "Aprobados: " << endl; 
+        imprimir(&colaAprobados);
+
+        cout << endl << "Reprobados: " << endl;
+        imprimir(&colaReprobados);
+    }
+
+    return 0;
+}
